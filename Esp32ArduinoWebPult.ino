@@ -20,71 +20,43 @@ unsigned long pultCommands[24] {
   0xFF10EF, 0xFF906F, 0xFF50AF, 0xFFC03F,
   0xFF30CF, 0xFFB04F, 0xFF708F, 0xFFF00F,
   0xFF08F7, 0xFF8877, 0xFF48B7, 0xFFC837,
-  0xFF28D7, 0xFFA857, 0xFFE817, 0xFF6897,
+  0xFF28D7, 0xFFA857, 0xFF6897, 0xFFE817,
   0xFF18E7, 0xFF9867, 0xFF58A7, 0xFFD827
-};
+}; // The function sendNEC(data, nbits) is deprecated and may not work as expected! Use sendNECRaw(data, NumberOfRepeats) or better sendNEC(Address, Command, NumberOfRepeats).
 String pultButtons[24][3] = {
   {"+", "", ""}, // 0
   {"-", "", ""}, // 1
-  {"off", "", ""}, // 2
-  {"on", "", ""}, // 3
-  {"R", "", ""}, // 4
-  {"G", "", ""}, // 5
-  {"B", "", ""}, // 6
+  {"off", "000", ""}, // 2
+  {"on", "e80101", ""}, // 3
+
+  {"R", "e80101", ""}, // 4
+  {"G", "02cc02", ""}, // 5
+  {"B", "403FFD", ""}, // 6
   {"W", "", ""}, // 7
 
-};
+  {"", "ff6000", ""}, // 8
+  {"", "46ffc5", ""}, // 9
+  {"", "605df7", ""}, // 10
+  {"Flash", "", ""}, // 11
 
-class nifWPButton {
-  private:
-    byte pin;
-  public:
-    nifWPButton(byte pin) {
-      // Use 'this->' to make the difference between the
-      // 'pin' attribute of the class and the
-      // local variable 'pin' created from the parameter.
-      this->pin = pin;
-      init();
-    }
-    void init() {
-      pinMode(pin, OUTPUT);
-      off();
-    }
-    void on() {
-      digitalWrite(pin, HIGH);
-    }
-    void off() {
-      digitalWrite(pin, LOW);
-    }
-};
+  {"", "ffa500", ""}, //12
+  {"", "5afff8", ""}, // 13
+  {"", "ffc4fd", ""}, // 14
+  {"Strobe", "", ""}, // 15
 
-class nifWPServer {
+  {"", "ffd125", ""}, // 16
+  {"", "4fd3ff", ""}, // 17
+  {"", "f5a0ff", ""}, // 18
+  {"Smooth", "", ""}, // 19
+
+  {"", "ffff00", ""}, // 20
+  {"", "6b9eff", ""}, // 21
+  {"", "ff92ce", ""}, // 22
+  {"Mode", "", ""}, // 23
 
 };
 
-class nifWebPult {
-  private:
-    unsigned long pultCommands[24];
-    String pultButtons[24][3];
-  public:
-    nifWebPult(unsigned long pultCommands[24]) {
-      // Use 'this->' to make the difference between the
-      // 'pin' attribute of the class and the
-      // local variable 'pin' created from the parameter.
-      this->pin = pin;
-      init();
-    }
-    void init() {
-      pinMode(pin, OUTPUT);
-      off();
-    }
-    void on() {
-      digitalWrite(pin, HIGH);
-    }
-
-};
-
-LiquidCrystal_I2C lcd(0x27, 16, 2);
+LiquidCrystal_I2C lcd(0x27, 16, 2); // See http://playground.arduino.cc/Main/I2cScanner how to test for a I2C device.
 WiFiServer server(80);
 IRsend irsend;
 
@@ -92,7 +64,6 @@ unsigned long tData = 0xFFE01F;
 
 
 void setup() {
-  pultButtons[18][0] = "SMOOTH";
 
   Serial.begin(115200);
   // Serial.print("Sketch:   ");   Serial.println(__FILE__);
@@ -103,10 +74,8 @@ void setup() {
 
   lcd.init();                      // initialize the lcd
   lcd.backlight();
-
   delay(80);
-  // See http://playground.arduino.cc/Main/I2cScanner how to test for a I2C device.
-
+  
   Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
@@ -141,7 +110,7 @@ void setup() {
   server.begin();
 
   tData = 0xFF609F;
-  irsend.sendNEC(tData, 32);
+  irsend.sendNEC(tData, 32); // The function sendNEC(data, nbits) is deprecated and may not work as expected! Use sendNECRaw(data, NumberOfRepeats) or better sendNEC(Address, Command, NumberOfRepeats).
   delay(40);
 }
 
