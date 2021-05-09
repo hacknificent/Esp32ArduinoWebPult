@@ -1,5 +1,4 @@
-
-
+// Esp32 Arduino WebPult for RGB Led lamp/strips
 #include <WiFi.h>
 #include <IRremote.h>
 #include <LiquidCrystal_I2C.h>
@@ -9,12 +8,10 @@
 
 //BluetoothSerial SerialBT;
 
-
-
-
-
+//CSS Styles
 const String MAIN_CSS = "ul.pult {  display: flex;  flex-wrap: wrap;  margin: 0 auto;  border: 1px solid #000;  border-radius: 30px;  width: 90%;  padding: 2.5%;}ul.pult li {  display: block;  flex-basis: 25%;  padding-top: 25%;  box-sizing: border-box;  position: relative;  color: #eee;}ul.pult li.disabled::after {  content: \"\";  display: block;  background: #000;  opacity: 0.6;  position: absolute;  top: 5%;  right: 5%;  bottom: 5%;  left: 5%;  border-radius: 100%;}ul.pult li::before, ul.pult li input[type=submit] {  content: \"\";  display: block;  z-index: -1;  border: 1px solid #000;  border-radius: 100%;  position: absolute;  top: 5%;  right: 5%;  bottom: 5%;  left: 5%;  background: currentColor;  text-decoration: none;  font-size: 7vw;  line-height: 1;}ul.pult li input[type=submit] {  width: 90%;  padding: 0;  color: transparent;  z-index: 2;  font-size: 0;  outline: none !important;}ul.pult li span {  color: #000;  text-align: center;  position: absolute;  top: 50%;  left: 50%;  transform: translate(-50%, -50%);}/*# sourceMappingURL=main.css.map */";
 
+//PultVars
 unsigned long pultCommands[24] {
   0xFF00FF, 0xFF40BF, 0xFF609F, 0xFFE01F,
   0xFF10EF, 0xFF906F, 0xFF50AF, 0xFFC03F,
@@ -66,16 +63,19 @@ unsigned long tData = 0xFFE01F;
 void setup() {
 
   Serial.begin(115200);
-  // Serial.print("Sketch:   ");   Serial.println(__FILE__);
-  // Serial.print("Uploaded: ");   Serial.println(__DATE__);
+  if (Serial.available()) {
+    Serial.print("Sketch:   ");   Serial.println(__FILE__);
+    Serial.print("Uploaded: ");   Serial.println(__DATE__);
+  }
 
-  pinMode(15, OUTPUT);      // set the LED pin mode
+
+  pinMode(15, OUTPUT);      // set the LED pin mode for IR sender
   pinMode(buttonPin, INPUT);// set the touch button pin
 
   lcd.init();                      // initialize the lcd
   lcd.backlight();
   delay(80);
-  
+
   Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
@@ -103,8 +103,8 @@ void setup() {
   lcd.setCursor(0, 0);
   // print static message
   lcd.print(WiFi.localIP());
-  lcd.setCursor(0, 1);
-  lcd.print(ssid);
+  // lcd.setCursor(0, 1);
+  // lcd.print(ssid);
   delay(80);
 
   server.begin();
@@ -113,6 +113,9 @@ void setup() {
   irsend.sendNEC(tData, 32); // The function sendNEC(data, nbits) is deprecated and may not work as expected! Use sendNECRaw(data, NumberOfRepeats) or better sendNEC(Address, Command, NumberOfRepeats).
   delay(40);
 }
+
+
+
 
 //BtnVars
 int currentTouchBtnAction = 0; // Btn Actions: 0 : "whait"; 1 : "action"; 2 : "longAction"; 3: "doubleTap";
@@ -123,9 +126,11 @@ bool displayBacklight = true;
 int displayBacklightTime = 250; // Sets how long backlight will work after touch btn action
 int displayBacklightTimer = displayBacklightTime;
 
+//LampVars
+bool nifLampPowerStatement = false;
+int nifLampMode = 0; // 0: White; 1: Smooth; (Switches on long-action)
 
-bool lampPowerStatement = false;
-int testLampMode = 0;
+
 void loop() {
   WiFiClient client = server.available();   // listen for incoming clients
 
@@ -176,12 +181,12 @@ void loop() {
       break;
     case 2:// "longAction"
       // Change Light Mode
-      if (testLampMode == 0) {
+      if (nifLampMode == 0) {
         tData = 0xFFC03F; // White
-        testLampMode = 1;
-      } else if (testLampMode == 1) {
+        nifLampMode = 1;
+      } else if (nifLampMode == 1) {
         tData = 0xFFE817; //Smooth
-        testLampMode = 0;
+        nifLampMode = 0;
       }
       irsend.sendNEC(tData, 32);
       delay(40);
@@ -190,12 +195,12 @@ void loop() {
       break;
     case 3:// "doubleTap"
       // Light On/Off
-      if (lampPowerStatement) {
+      if (nifLampPowerStatement) {
         tData = 0xFF609F;//off
-        lampPowerStatement = false;
+        nifLampPowerStatement = false;
       } else {
         tData = 0xFFE01F;//on
-        lampPowerStatement = true;
+        nifLampPowerStatement = true;
       }
       currentTouchBtnAction = 0;
       lastTouchActionWas = 0;
@@ -209,7 +214,9 @@ void loop() {
       //      break;
   }
 
-  bool getCommand = false;
+
+  bool getCommand = false; //Changes when user ask to do pultCommand
+  
   if (client) {                             // if you get a client,
     Serial.println("New Client.");           // print a message out the serial port
     String currentLine = "";                // make a String to hold incoming data from the client
@@ -227,7 +234,6 @@ void loop() {
             client.println("HTTP/1.1 200 OK");
             client.println("Content-type:text/html");
             client.println();
-            //client.print(PULT_PAGE);
 
             client.print("<head>");
             client.print("<meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">");
@@ -281,40 +287,6 @@ void loop() {
         }
 
 
-
-        //        if (currentLine.endsWith("GET /pult?btn=")) {
-        //          char val = client.read();
-        //          delay(40);
-        //          String commandNum;
-        //          while (val != 'c') {
-        //            commandNum += val;
-        //            val = client.read();
-        //            delay(40);
-        //          }
-        //          lcd.clear();
-        //          lcd.setCursor(0, 0);
-        //          lcd.print("Command: ");
-        //          lcd.print(commandNum);
-        //          delay(20);
-        //          displayBacklightTimer = displayBacklightTime;
-        //
-        //          irsend.sendNEC(pultCommands[commandNum.toInt()], 32);
-        //          delay(80);
-        //
-        //
-        //        }
-
-        if (currentLine.endsWith("POST /pultTest")) {
-          lcd.clear();
-          lcd.setCursor(0, 0);
-          lcd.print("Post!!!");
-
-          delay(80);
-          //lcd.backlight(); // turn on backlight.
-          displayBacklightTimer = displayBacklightTime / 2;
-
-        }
-
         if (currentLine.endsWith("Submit")) {
           lcd.clear();
           lcd.setCursor(0, 1);
@@ -365,8 +337,6 @@ void loop() {
           }
         }
 
-
-        // client.stop(); // err
       }
 
     }
