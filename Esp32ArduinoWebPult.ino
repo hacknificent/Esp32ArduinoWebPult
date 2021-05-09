@@ -5,13 +5,13 @@
 #include <LiquidCrystal_I2C.h>
 #include <Wire.h>
 // #include "BluetoothSerial.h"
+#include "config.h"
 
 //BluetoothSerial SerialBT;
 
-const int buttonPin = 2; // touch button pin
 
-const char* ssid     = "Xiaomi_••••••";
-const char* password = "159q2s75";
+
+
 
 const String MAIN_CSS = "ul.pult {  display: flex;  flex-wrap: wrap;  margin: 0 auto;  border: 1px solid #000;  border-radius: 30px;  width: 90%;  padding: 2.5%;}ul.pult li {  display: block;  flex-basis: 25%;  padding-top: 25%;  box-sizing: border-box;  position: relative;  color: #eee;}ul.pult li.disabled::after {  content: \"\";  display: block;  background: #000;  opacity: 0.6;  position: absolute;  top: 5%;  right: 5%;  bottom: 5%;  left: 5%;  border-radius: 100%;}ul.pult li::before, ul.pult li input[type=submit] {  content: \"\";  display: block;  z-index: -1;  border: 1px solid #000;  border-radius: 100%;  position: absolute;  top: 5%;  right: 5%;  bottom: 5%;  left: 5%;  background: currentColor;  text-decoration: none;  font-size: 7vw;  line-height: 1;}ul.pult li input[type=submit] {  width: 90%;  padding: 0;  color: transparent;  z-index: 2;  font-size: 0;  outline: none !important;}ul.pult li span {  color: #000;  text-align: center;  position: absolute;  top: 50%;  left: 50%;  transform: translate(-50%, -50%);}/*# sourceMappingURL=main.css.map */";
 
