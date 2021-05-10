@@ -32,7 +32,7 @@ class nifButton {
             //...
           }
         }
-        delay(20);
+        delay(80);
       }
 
 

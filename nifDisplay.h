@@ -38,6 +38,7 @@ class nifDisplay {
            }
 
          }
+         delay(40);
     }
 
     void setHeader(String message){

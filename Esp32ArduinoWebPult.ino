@@ -9,9 +9,10 @@
 WiFiServer server(80);
 IRsend irsend;
 nifButton tButton(2);
-nifDisplay lcdDisplay(250);
+nifDisplay lcdDisplay(200);
 
 unsigned long tData = 0xFFE01F;
+String pultForm;
 
 void setup() {
 
@@ -62,6 +63,31 @@ void setup() {
   tData = 0xFF609F; //off
   irsend.sendNEC(tData, 32); // The function sendNEC(data, nbits) is deprecated and may not work as expected! Use sendNECRaw(data, NumberOfRepeats) or better sendNEC(Address, Command, NumberOfRepeats).
   delay(40);
+
+  pultForm += "<form action=\"pult\" target=\"_self\" method=\"get\" >";
+  pultForm += "<ul class=\"pult\">";
+  //Print Pult Buttons
+  for (int i = 0; i < 24; i++) {
+    pultForm += "<li class=\"pultButton\"";
+    if (pultButtons[i][1] && pultButtons[i][1] != "") {
+      pultForm += "style = \"color: #" + pultButtons[i][1] + ";\""; // Print button color
+    }
+    pultForm += ">";
+
+    if (pultButtons[i][0] && pultButtons[i][0] != "") {
+
+      pultForm += "<span>";
+      pultForm += pultButtons[i][0];// Print button Label
+      pultForm += "</span>";
+    }
+
+    pultForm += "<input type=\"submit\" name=\"pBtn\" value=\"" + String(i) + "c\">";
+
+
+    pultForm += "</li>";
+  }
+  pultForm += "</ul></form>";
+
 }
 
 
@@ -140,24 +166,7 @@ void loop() {
             client.print("<style>" + MAIN_CSS + "</style>");
             client.print("</head><body>");
 
-            client.print("<form action=\"pult\" target=\"_self\" method=\"get\" ><ul class=\"pult\">");
-            //Print Pult Buttons
-            for (int i = 0; i < 24; i++) {
-              client.print("<li class=\"pultButton\"");
-              if (pultButtons[i][1] && pultButtons[i][1] != "") {
-                client.print("style = \"color: #" + pultButtons[i][1] + ";\""); // Print button color
-              }
-              client.print(">");
-              if (pultButtons[i][0] && pultButtons[i][0] != "") {
-                client.print("<span>" + pultButtons[i][0] + "</span>"); // Print button Label
-              }
-              client.print("<input type=\"submit\" name=\"pBtn\" value=\"" + String(i) + "c\">");
-              client.print("</li>");
-            }
-
-            client.print("</ul></form>");
-
-
+            client.print(pultForm);
 
             client.print("<form action=\"pultTest\" target=\"_self\" method=\"post\" ><ul class=\"pult\">");
 
@@ -165,7 +174,7 @@ void loop() {
 
             client.print("style = \"flex-basis: 100%;\">"); // Print button color
 
-            client.print("<span>Pult Test</span>"); // Print button Label              client.print("<input type=\"submit\" name=\"btn\" value=\"" + String(i) + "c\">");
+            client.print("<span>Pult Test</span>"); // Print button Label 
             client.print("<input type=\"submit\" name=\"btn\" value=\"Submit\">");
             client.print("</li>");
 
