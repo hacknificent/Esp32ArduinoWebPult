@@ -1,4 +1,41 @@
-/home/userificent/Desktop/Esp32ArduinoWebPult
 <!-- saved from url=(0014)about:internet -->
-<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0"><style>ul.pult {  display: flex;  flex-wrap: wrap;  margin: 0 auto;  border: 1px solid #000;  border-radius: 30px;  width: 90%;  padding: 2.5%;}ul.pult li {  display: block;  flex-basis: 25%;  padding-top: 25%;  box-sizing: border-box;  position: relative;  color: #eee;}ul.pult li.disabled::after {  content: "";  display: block;  background: #000;  opacity: 0.6;  position: absolute;  top: 5%;  right: 5%;  bottom: 5%;  left: 5%;  border-radius: 100%;}ul.pult li::before, ul.pult li input[type=submit] {  content: "";  display: block;  z-index: -1;  border: 1px solid #000;  border-radius: 100%;  position: absolute;  top: 5%;  right: 5%;  bottom: 5%;  left: 5%;  background: currentColor;  text-decoration: none;  font-size: 7vw;  line-height: 1;}ul.pult li input[type=submit] {  width: 90%;  padding: 0;  color: transparent;  z-index: 2;  font-size: 0;  outline: none !important;}ul.pult li span {  color: #000;  text-align: center;  position: absolute;  top: 50%;  left: 50%;  transform: translate(-50%, -50%);}/*# sourceMappingURL=main.css.map */</style></head><body><form action="http://192.168.31.37/pult" target="_self" method="get"><ul class="pult"><li class="pultButton"><span>+</span><input type="submit" name="pBtn" value="0c"></li><li class="pultButton"><span>-</span><input type="submit" name="pBtn" value="1c"></li><li class="pultButton" style="color: #505050;"><span>off</span><input type="submit" name="pBtn" value="2c"></li><li class="pultButton" style="color: #e80101;"><span>on</span><input type="submit" name="pBtn" value="3c"></li><li class="pultButton" style="color: #e80101;"><span>R</span><input type="submit" name="pBtn" value="4c"></li><li class="pultButton" style="color: #02cc02;"><span>G</span><input type="submit" name="pBtn" value="5c"></li><li class="pultButton" style="color: #403FFD;"><span>B</span><input type="submit" name="pBtn" value="6c"></li><li class="pultButton"><span>W</span><input type="submit" name="pBtn" value="7c"></li><li class="pultButton" style="color: #ff6000;"><input type="submit" name="pBtn" value="8c"></li><li class="pultButton" style="color: #46ffc5;"><input type="submit" name="pBtn" value="9c"></li><li class="pultButton" style="color: #605df7;"><input type="submit" name="pBtn" value="10c"></li><li class="pultButton"><span>Flash</span><input type="submit" name="pBtn" value="11c"></li><li class="pultButton" style="color: #ffa500;"><input type="submit" name="pBtn" value="12c"></li><li class="pultButton" style="color: #5afff8;"><input type="submit" name="pBtn" value="13c"></li><li class="pultButton" style="color: #ffc4fd;"><input type="submit" name="pBtn" value="14c"></li><li class="pultButton"><span>Strobe</span><input type="submit" name="pBtn" value="15c"></li><li class="pultButton" style="color: #ffd125;"><input type="submit" name="pBtn" value="16c"></li><li class="pultButton" style="color: #4fd3ff;"><input type="submit" name="pBtn" value="17c"></li><li class="pultButton" style="color: #f5a0ff;"><input type="submit" name="pBtn" value="18c"></li><li class="pultButton"><span>Smooth</span><input type="submit" name="pBtn" value="19c"></li><li class="pultButton" style="color: #ffff00;"><input type="submit" name="pBtn" value="20c"></li><li class="pultButton" style="color: #6b9eff;"><input type="submit" name="pBtn" value="21c"></li><li class="pultButton" style="color: #ff92ce;"><input type="submit" name="pBtn" value="22c"></li><li class="pultButton"><span>Mode</span><input type="submit" name="pBtn" value="23c"></li></ul></form>
-</body></html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <style>
+        ul.pult {  display: flex;  flex-wrap: wrap;  margin: 0 auto;  border: 1px solid #000;  border-radius: 30px;  width: 90%;  padding: 2.5%;}ul.pult li {  display: block;  flex-basis: 25%;  padding-top: 25%;  box-sizing: border-box;  position: relative;  color: #eee;}ul.pult li.disabled::after {  content: "";  display: block;  background: #000;  opacity: 0.6;  position: absolute;  top: 5%;  right: 5%;  bottom: 5%;  left: 5%;  border-radius: 100%;}ul.pult li::before, ul.pult li input[type=submit] {  content: "";  display: block;  z-index: -1;  border: 1px solid #000;  border-radius: 100%;  position: absolute;  top: 5%;  right: 5%;  bottom: 5%;  left: 5%;  background: currentColor;  text-decoration: none;  font-size: 7vw;  line-height: 1;}ul.pult li input[type=submit] {  width: 90%;  padding: 0;  color: transparent;  z-index: 2;  font-size: 0;  outline: none !important;}ul.pult li span {  color: #000;  text-align: center;  position: absolute;  top: 50%;  left: 50%;  transform: translate(-50%, -50%);}/*# sourceMappingURL=main.css.map */
+    </style>
+</head>
+<body>
+<form action="http://192.168.31.37/pult" target="_self" method="get">
+    <ul class="pult">
+        <li class="pultButton"><span>+</span><input type="submit" name="pBtn" value="0c"></li>
+        <li class="pultButton"><span>-</span><input type="submit" name="pBtn" value="1c"></li>
+        <li class="pultButton" style="color: #505050;"><span>off</span><input type="submit" name="pBtn" value="2c"></li>
+        <li class="pultButton" style="color: #e80101;"><span>on</span><input type="submit" name="pBtn" value="3c"></li>
+        <li class="pultButton" style="color: #e80101;"><span>R</span><input type="submit" name="pBtn" value="4c"></li>
+        <li class="pultButton" style="color: #02cc02;"><span>G</span><input type="submit" name="pBtn" value="5c"></li>
+        <li class="pultButton" style="color: #403FFD;"><span>B</span><input type="submit" name="pBtn" value="6c"></li>
+        <li class="pultButton"><span>W</span><input type="submit" name="pBtn" value="7c"></li>
+        <li class="pultButton" style="color: #ff6000;"><input type="submit" name="pBtn" value="8c"></li>
+        <li class="pultButton" style="color: #46ffc5;"><input type="submit" name="pBtn" value="9c"></li>
+        <li class="pultButton" style="color: #605df7;"><input type="submit" name="pBtn" value="10c"></li>
+        <li class="pultButton"><span>Flash</span><input type="submit" name="pBtn" value="11c"></li>
+        <li class="pultButton" style="color: #ffa500;"><input type="submit" name="pBtn" value="12c"></li>
+        <li class="pultButton" style="color: #5afff8;"><input type="submit" name="pBtn" value="13c"></li>
+        <li class="pultButton" style="color: #ffc4fd;"><input type="submit" name="pBtn" value="14c"></li>
+        <li class="pultButton"><span>Strobe</span><input type="submit" name="pBtn" value="15c"></li>
+        <li class="pultButton" style="color: #ffd125;"><input type="submit" name="pBtn" value="16c"></li>
+        <li class="pultButton" style="color: #4fd3ff;"><input type="submit" name="pBtn" value="17c"></li>
+        <li class="pultButton" style="color: #f5a0ff;"><input type="submit" name="pBtn" value="18c"></li>
+        <li class="pultButton"><span>Smooth</span><input type="submit" name="pBtn" value="19c"></li>
+        <li class="pultButton" style="color: #ffff00;"><input type="submit" name="pBtn" value="20c"></li>
+        <li class="pultButton" style="color: #6b9eff;"><input type="submit" name="pBtn" value="21c"></li>
+        <li class="pultButton" style="color: #ff92ce;"><input type="submit" name="pBtn" value="22c"></li>
+        <li class="pultButton"><span>Mode</span><input type="submit" name="pBtn" value="23c"></li>
+    </ul>
+</form>
+</body>
+</html>
