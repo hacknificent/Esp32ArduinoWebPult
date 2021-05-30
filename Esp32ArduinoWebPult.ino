@@ -95,6 +95,7 @@ void setup() {
 
 //LampVars
 bool nifLampPowerStatement = false;
+
 int nifLampMode = 0; // 0: White; 1: Smooth; (Switches on long-action)
 
 void loop() {
@@ -165,25 +166,24 @@ void loop() {
             client.print("<meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">");
             client.print("<style>" + MAIN_CSS + "</style>");
             client.print("</head><body>");
-
             client.print(pultForm);
+            /*
+                        client.print("<form action=\"pultTest\" target=\"_self\" method=\"post\" ><ul class=\"pult\">");
 
-            client.print("<form action=\"pultTest\" target=\"_self\" method=\"post\" ><ul class=\"pult\">");
+                        client.print("<li class=\"pultButton\"");
 
-            client.print("<li class=\"pultButton\"");
+                        client.print("style = \"flex-basis: 100%;\">"); // Print button color
 
-            client.print("style = \"flex-basis: 100%;\">"); // Print button color
-
-            client.print("<span>Pult Test</span>"); // Print button Label 
-            client.print("<input type=\"submit\" name=\"btn\" value=\"Submit\">");
-            client.print("</li>");
-
-
-            client.print("</ul></form>");
+                        client.print("<span>Pult Test</span>"); // Print button Label
+                        client.print("<input type=\"submit\" name=\"btn\" value=\"Submit\">");
+                        client.print("</li>");
 
 
+                        client.print("</ul></form>");
+            */
 
-            client.print("</body>");
+
+            //client.print("<script>alert(\"Test\")</script></body>");
             // The HTTP response ends with another blank line:
             client.println();
             // break out of the while loop:
@@ -213,12 +213,22 @@ void loop() {
 
 
         if (currentLine.endsWith("GET /pult?pBtn=")) {
-          getCommand = true; //
+          getCommand = true; // !!! or ParsInt !!!
         }
 
         if (getCommand == true) {
           for (int i = 0; i < 24; i++) {
+
             if (currentLine.endsWith("pBtn=" + String(i) + 'c')) {
+
+              //Change to swith/case
+              if (i == 3) { //If command is "On"
+                nifLampPowerStatement = true;
+              }
+              if (i == 2) { //If command is "Off"
+                nifLampPowerStatement = false;
+              }
+
               //lcd.clear();
               lcd.setCursor(0, 1);
               lcd.print("Command: ");
