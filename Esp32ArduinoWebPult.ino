@@ -189,6 +189,7 @@ void loop() {
           if (getRequest.startsWith("/")) {
 
             if (getRequest == "/pult/") {
+
               // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
               // and a content-type so the client knows what's coming, then a blank line:
               client.println("HTTP/1.1 200 OK");
@@ -200,7 +201,7 @@ void loop() {
               client.print("<style>" + MAIN_CSS + "</style>");
               client.print("</head><body>");
               client.print(pultForm);
-              client.print("<iframe id=\"progressive-iframe\" src=\"/\" frameborder=\"0\" seamless></iframe>");
+              client.print("<iframe id=\"progressive-iframe\" src=\"/command/3/\" frameborder=\"0\" seamless></iframe>");
               //client.print("<script type="text/javascript">alert(\"Test\")</script></body>");
               client.print("</body>");
               // The HTTP response ends with another blank line:
@@ -208,29 +209,27 @@ void loop() {
               // break out of the while loop:
               break;
 
-            } else if (getRequest.startsWith("/command")) {
+            } else if (getRequest.startsWith("/command/")) {
               for (int i = 0; i < 24; i++) {
-                if (getRequest.endsWith('d' + String(i) + '/' )) {
-                  pult.chooseCommand(i);
+                if (getRequest.endsWith('/' + String(i) + '/' )) {
+                  pult.chooseCommand(i); // !!!
+                  client.println("HTTP/1.1 200 OK");
+                  client.println(); // !!!
+                  break;
                 }
               }
-
             } else if (getRequest == "/makeCoffee") {
               client.println("HTTP/1.1 418");
               client.println();
               break;
-            } else if (getRequest == "/favicon.ico") {
+            } else /*if (getRequest == "/favicon.ico")*/ {
               client.println("HTTP/1.1 404 NOT FOUND");
               client.println();
               break;
             }
 
-
           }
-
         }
-        pult.sendChoosenCommand();
-
       }
 
     }
@@ -240,4 +239,5 @@ void loop() {
     // delay(40);
 
   }
+  pult.sendChoosenCommand();
 }
