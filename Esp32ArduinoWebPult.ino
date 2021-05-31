@@ -1,23 +1,27 @@
 // Esp32 Arduino WebPult for RGB Led lamp/strips
 #include <WiFi.h>
-#include <IRremote.h>
+
 #include <Wire.h>
 #include "config.h"
 #include "nifButton.h"
 #include "nifDisplay.h"
+#include "nifPult.h"
 
 WiFiServer server(80);
-IRsend irsend;
+nifPult pult(15, pultCommands);
 nifButton tButton(2);
 nifDisplay lcdDisplay(200);
 
-String nifGetRequest( String clientLine) {
-  String clientRequest = clientLine;
-  clientRequest.replace(" HTTP/1.1", "");
-  clientRequest.replace("GET /", "/");
-  return clientRequest;
 
+String nifGetRequest( String clientLine) { //clear request / sanitize
+  String clientRequest = clientLine;
+  clientRequest.replace(" HTTP/1.1", "/");
+  clientRequest.replace("GET /", "/");
+  clientRequest.replace("//", "/");
+  return clientRequest;
 }
+
+
 unsigned long tData = 0xFFE01F;
 String pultForm;
 
@@ -29,7 +33,8 @@ void setup() {
     Serial.print("Uploaded: ");   Serial.println(__DATE__);
   }
 
-  pinMode(15, OUTPUT);      // set the LED pin mode for IR sender
+  // set the LED pin mode for IR sender
+  pult.init();
   lcdDisplay.init();
   tButton.init();
 
@@ -164,22 +169,6 @@ void loop() {
           // that's the end of the client HTTP request, so send a response:
           if (currentLine.length() == 0) {
 
-            /*
-                        client.print("<form action=\"pultTest\" target=\"_self\" method=\"post\" ><ul class=\"pult\">");
-
-                        client.print("<li class=\"pultButton\"");
-
-                        client.print("style = \"flex-basis: 100%;\">"); // Print button color
-
-                        client.print("<span>Pult Test</span>"); // Print button Label
-                        client.print("<input type=\"submit\" name=\"btn\" value=\"Submit\">");
-                        client.print("</li>");
-
-
-                        client.print("</ul></form>");
-            */
-
-
 
           } else {    // if you got a newline, then clear currentLine:
             currentLine = "";
@@ -189,13 +178,13 @@ void loop() {
         }
 
 
+        //Check if currentLine is GET client request
         if (currentLine.endsWith("HTTP/1.1")) {
-
           if (currentLine.startsWith("GET /")) {
-            getRequest = nifGetRequest(currentLine);
+            getRequest = nifGetRequest(currentLine); //return
           }
-
         }
+
         if (getRequest != "") {
           if (getRequest.startsWith("/")) {
 
@@ -211,13 +200,20 @@ void loop() {
               client.print("<style>" + MAIN_CSS + "</style>");
               client.print("</head><body>");
               client.print(pultForm);
-              //client.print("<script>alert(\"Test\")</script></body>");
+              client.print("<iframe id=\"progressive-iframe\" src=\"/\" frameborder=\"0\" seamless></iframe>");
+              //client.print("<script type="text/javascript">alert(\"Test\")</script></body>");
               client.print("</body>");
               // The HTTP response ends with another blank line:
               client.println();
               // break out of the while loop:
               break;
+
             } else if (getRequest.startsWith("/command")) {
+              for (int i = 0; i < 24; i++) {
+                if (getRequest.endsWith('d' + String(i) + '/' )) {
+                  pult.chooseCommand(i);
+                }
+              }
 
             } else if (getRequest == "/makeCoffee") {
               client.println("HTTP/1.1 418");
@@ -233,53 +229,7 @@ void loop() {
           }
 
         }
-
-
-        if (currentLine.endsWith("GET /pult?pBtn=")) {
-          getCommand = true; // !!! or ParsInt !!!
-        }
-
-        if (getCommand == true) {
-          for (int i = 0; i < 24; i++) {
-
-            if (currentLine.endsWith("pBtn=" + String(i) + 'c')) {
-
-              //Change to swith/case
-              if (i == 3) { //If command is "On"
-                nifLampPowerStatement = true;
-              }
-              if (i == 2) { //If command is "Off"
-                nifLampPowerStatement = false;
-              }
-
-              //lcd.clear();
-              lcd.setCursor(0, 1);
-              lcd.print("Command: ");
-              lcd.print(i);
-              delay(80);
-              //lcd.backlight(); // turn on backlight.
-              //displayBacklightTimer = displayBacklightTime / 2;
-              lcdDisplay.startBacklightTimer();
-
-              irsend.sendNEC(pultCommands[i], 32);
-              delay(80);
-              getCommand = false;
-            }
-          }
-        }
-
-
-
-        if (currentLine.endsWith("GET /?test=1")) {
-          for (int i = 0; i < 100; i++) {
-            tData = 0xFF609F;
-            irsend.sendNEC(tData, 32);
-            delay(500);
-            tData = 0xFFE01F;
-            irsend.sendNEC(tData, 32);
-            delay(500);
-          }
-        }
+        pult.sendChoosenCommand();
 
       }
 
