@@ -20,6 +20,9 @@ class nifDisplay {
       updateDisplayBacklight();
       startBacklightTimer();
     }
+    void alarm(String message){
+      
+    }
     void startBacklightTimer(){
         this->displayBacklightTimer = displayBacklightTime;
     }

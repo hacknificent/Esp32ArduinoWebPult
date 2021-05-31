@@ -11,6 +11,13 @@ IRsend irsend;
 nifButton tButton(2);
 nifDisplay lcdDisplay(200);
 
+String nifGetRequest( String clientLine) {
+  String clientRequest = clientLine;
+  clientRequest.replace(" HTTP/1.1", "");
+  clientRequest.replace("GET /", "/");
+  return clientRequest;
+
+}
 unsigned long tData = 0xFFE01F;
 String pultForm;
 
@@ -147,7 +154,7 @@ void loop() {
   if (client) {                             // if you get a client,
     Serial.println("New Client.");           // print a message out the serial port
     String currentLine = "";                // make a String to hold incoming data from the client
-
+    String getRequest = "";
     while (client.connected()) {            // loop while the client's connected
       if (client.available()) {             // if there's bytes to read from the client,
         char c = client.read();             // read a byte, then
@@ -156,17 +163,7 @@ void loop() {
           // if the current line is blank, you got two newline characters in a row.
           // that's the end of the client HTTP request, so send a response:
           if (currentLine.length() == 0) {
-            // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
-            // and a content-type so the client knows what's coming, then a blank line:
-            client.println("HTTP/1.1 200 OK");
-            client.println("Content-type:text/html");
-            client.println();
 
-            client.print("<head>");
-            client.print("<meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">");
-            client.print("<style>" + MAIN_CSS + "</style>");
-            client.print("</head><body>");
-            client.print(pultForm);
             /*
                         client.print("<form action=\"pultTest\" target=\"_self\" method=\"post\" ><ul class=\"pult\">");
 
@@ -183,11 +180,7 @@ void loop() {
             */
 
 
-            //client.print("<script>alert(\"Test\")</script></body>");
-            // The HTTP response ends with another blank line:
-            client.println();
-            // break out of the while loop:
-            break;
+
           } else {    // if you got a newline, then clear currentLine:
             currentLine = "";
           }
@@ -196,20 +189,50 @@ void loop() {
         }
 
 
-        if (currentLine.endsWith("Submit")) {
-          lcd.clear();
-          lcd.setCursor(0, 1);
-          lcd.print("Sub!!!");
-          delay(80);
-          //lcd.backlight(); // turn on backlight.
-          //displayBacklightTimer = displayBacklightTime / 2;
-          lcdDisplay.startBacklightTimer();
+        if (currentLine.endsWith("HTTP/1.1")) {
+
+          if (currentLine.startsWith("GET /")) {
+            getRequest = nifGetRequest(currentLine);
+          }
 
         }
+        if (getRequest != "") {
+          if (getRequest.startsWith("/")) {
+
+            if (getRequest == "/pult/") {
+              // HTTP headers always start with a response code (e.g. HTTP/1.1 200 OK)
+              // and a content-type so the client knows what's coming, then a blank line:
+              client.println("HTTP/1.1 200 OK");
+              client.println("Content-type:text/html");
+              client.println();
+
+              client.print("<head>");
+              client.print("<meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">");
+              client.print("<style>" + MAIN_CSS + "</style>");
+              client.print("</head><body>");
+              client.print(pultForm);
+              //client.print("<script>alert(\"Test\")</script></body>");
+              client.print("</body>");
+              // The HTTP response ends with another blank line:
+              client.println();
+              // break out of the while loop:
+              break;
+            } else if (getRequest.startsWith("/command")) {
+
+            } else if (getRequest == "/makeCoffee") {
+              client.println("HTTP/1.1 418");
+              client.println();
+              break;
+            } else if (getRequest == "/favicon.ico") {
+              client.println("HTTP/1.1 404 NOT FOUND");
+              client.println();
+              break;
+            }
 
 
+          }
 
-
+        }
 
 
         if (currentLine.endsWith("GET /pult?pBtn=")) {

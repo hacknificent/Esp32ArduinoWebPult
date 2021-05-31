@@ -2,7 +2,7 @@ New Client.
 
 GET /pult HTTP/1.1
 
-Host: 192.168.31.37WebPult_OOP
+Host: 192.168.31.37
 
 Connection: keep-alive
 
