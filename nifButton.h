@@ -32,7 +32,7 @@ class nifButton {
             //...
           }
         }
-        delay(80);
+        delay(20);
       }
 
 
@@ -55,6 +55,7 @@ class nifButton {
       int btnState = currentTouchBtnAction;
       if (currentTouchBtnAction > 1) {
         resetState();
+        this->touchButtonCounter = 0;
       }
       return  btnState;
     }

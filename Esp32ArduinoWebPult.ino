@@ -165,7 +165,6 @@ void loop() {
             client.print("<meta charset=\"UTF-8\"><meta name=\"viewport\" content=\"width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0\">");
             client.print("<style>" + MAIN_CSS + "</style>");
             client.print("</head><body>");
-
             client.print(pultForm);
 
             client.print("<form action=\"pultTest\" target=\"_self\" method=\"post\" ><ul class=\"pult\">");
@@ -174,7 +173,7 @@ void loop() {
 
             client.print("style = \"flex-basis: 100%;\">"); // Print button color
 
-            client.print("<span>Pult Test</span>"); // Print button Label 
+            client.print("<span>Pult Test</span>"); // Print button Label
             client.print("<input type=\"submit\" name=\"btn\" value=\"Submit\">");
             client.print("</li>");
 
@@ -183,7 +182,7 @@ void loop() {
 
 
 
-            client.print("</body>");
+            //client.print("<script>alert(\"Test\")</script></body>");
             // The HTTP response ends with another blank line:
             client.println();
             // break out of the while loop:
